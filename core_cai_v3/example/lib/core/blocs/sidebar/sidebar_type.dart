@@ -1,0 +1,4 @@
+enum SideBarType {
+  main,
+  appInfo,
+}
