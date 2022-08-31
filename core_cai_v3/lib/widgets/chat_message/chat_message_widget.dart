@@ -28,7 +28,7 @@ class ChatMessageWidget extends StatelessWidget {
 
   Widget getMessageFileWidget(BuildContext context) {
     return ChatMessageFile(
-      isCurrentUserMessage: currentUser?.uid == message.user!.uid,
+      isCurrentUserMessage: currentUser?.uid == message.user?.uid,
       textMessage: getMessageTextWidget(context),
       messageDate: getMessageDateTime(),
       fileName: message.fileName ?? "",
@@ -45,13 +45,13 @@ class ChatMessageWidget extends StatelessWidget {
           : null,
       margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
       child: Row(
-        mainAxisAlignment: (currentUser?.uid == message.user!.uid)
+        mainAxisAlignment: (currentUser?.uid == message.user?.uid)
             ? MainAxisAlignment.end
             : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          if (currentUser?.uid != message.user!.uid) ...[
-            getMessageUserIcon(context, message.user!),
+          if (currentUser?.uid != message.user?.uid) ...[
+            getMessageUserIcon(context, message.user ?? ChatUser()),
             const SizedBox(
               width: 10,
             ),
@@ -68,19 +68,19 @@ class ChatMessageWidget extends StatelessWidget {
             ),
             decoration: BoxDecoration(
                 color: (!CustomFunctions.isDarkTheme(context))
-                    ? (currentUser?.uid == message.user!.uid)
+                    ? (currentUser?.uid == message.user?.uid)
                         ? AppColors.kChatBackgroundColor
                         : AppColors.kGreyColor
-                    : (currentUser?.uid == message.user!.uid)
+                    : (currentUser?.uid == message.user?.uid)
                         ? AppColors.isMeChatWidgetDark
                         : AppColors.chatWidgetDark,
                 borderRadius: BorderRadius.circular(12)),
           ),
-          if (currentUser?.uid == message.user!.uid) ...[
+          if (currentUser?.uid == message.user?.uid) ...[
             const SizedBox(
               width: 10,
             ),
-            getMessageUserIcon(context, message.user!),
+            getMessageUserIcon(context, message.user ?? ChatUser()),
           ],
         ],
       ),
@@ -101,12 +101,12 @@ class ChatMessageWidget extends StatelessWidget {
     //         : null,
     //     margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
     //     child: Row(
-    //       mainAxisAlignment: (currentUser?.id == message.user!.uid)
+    //       mainAxisAlignment: (currentUser?.id == message.user?.uid)
     //           ? MainAxisAlignment.end
     //           : MainAxisAlignment.start,
     //       crossAxisAlignment: CrossAxisAlignment.end,
     //       children: [
-    //         if (currentUser?.id != message.user!.uid) ...[
+    //         if (currentUser?.id != message.user?.uid) ...[
     //           getMessageUserIcon(context, message.user!),
     //           const SizedBox(
     //             width: 10,
@@ -124,15 +124,15 @@ class ChatMessageWidget extends StatelessWidget {
     //           ),
     //           decoration: BoxDecoration(
     //               color: (!CustomFunctions.isDarkTheme(context))
-    //                   ? (currentUser?.id == message.user!.uid)
+    //                   ? (currentUser?.id == message.user?.uid)
     //                       ? AppColors.kChatBackgroundColor
     //                       : AppColors.kGreyColor
-    //                   : (currentUser?.id == message.user!.uid)
+    //                   : (currentUser?.id == message.user?.uid)
     //                       ? AppColors.isMeChatWidgetDark
     //                       : AppColors.chatWidgetDark,
     //               borderRadius: BorderRadius.circular(12)),
     //         ),
-    //         if (currentUser?.id == message.user!.uid) ...[
+    //         if (currentUser?.id == message.user?.uid) ...[
     //           const SizedBox(
     //             width: 10,
     //           ),
@@ -207,14 +207,14 @@ class ChatMessageWidget extends StatelessWidget {
 
   Widget getTaskStatusTextWidget(BuildContext context) {
     return ChatMessageText(
-      isCurrentUserMessage: currentUser?.uid == message.user!.uid,
+      isCurrentUserMessage: currentUser?.uid == message.user?.uid,
       textMessage: getTaskStatusText(context),
       messageDate: getMessageDateTime(),
     );
   }
 
   Widget getTaskStatusText(BuildContext context) {
-    if (currentUser?.uid == message.user!.uid) {
+    if (currentUser?.uid == message.user?.uid) {
       return chatText("You ${message.text}", context);
     } else {
       return chatText("${message.user?.name ?? ""} ${message.text}", context);
@@ -223,14 +223,14 @@ class ChatMessageWidget extends StatelessWidget {
 
   Widget getDeleteMessageWidget(BuildContext context) {
     return ChatMessageText(
-      isCurrentUserMessage: currentUser?.uid == message.user!.uid,
+      isCurrentUserMessage: currentUser?.uid == message.user?.uid,
       textMessage: getDeleteText(context),
       messageDate: getMessageDateTime(),
     );
   }
 
   Widget getDeleteText(BuildContext context) {
-    if (currentUser?.uid == message.user!.uid) {
+    if (currentUser?.uid == message.user?.uid) {
       return chatText("You deleted this message", context);
     } else {
       return chatText("This message is deleted", context);
@@ -239,15 +239,15 @@ class ChatMessageWidget extends StatelessWidget {
 
   Widget getChatMessageTextWidget(BuildContext context) {
     return ChatMessageText(
-      isCurrentUserMessage: currentUser?.uid == message.user!.uid,
+      isCurrentUserMessage: currentUser?.uid == message.user?.uid,
       textMessage: getMessageTextWidget(context),
       messageDate: getMessageDateTime(),
     );
     // return Column(
-    //   mainAxisAlignment: (currentUser?.id == message.user!.uid)
+    //   mainAxisAlignment: (currentUser?.id == message.user?.uid)
     //       ? MainAxisAlignment.end
     //       : MainAxisAlignment.start,
-    //   crossAxisAlignment: (currentUser?.id == message.user!.uid)
+    //   crossAxisAlignment: (currentUser?.id == message.user?.uid)
     //       ? CrossAxisAlignment.end
     //       : CrossAxisAlignment.start,
     //   children: [
@@ -261,7 +261,7 @@ class ChatMessageWidget extends StatelessWidget {
   }
 
   Widget getMessageTextWidget(BuildContext context) {
-    print('getMessageTextWidget $message');
+    // print('getMessageTextWidget $message');
     if (message.mentions != null && message.mentions?.isNotEmpty == true) {
       return SelectableText.rich(
         buildCommentText(
@@ -271,7 +271,7 @@ class ChatMessageWidget extends StatelessWidget {
         ),
       );
     }
-    return chatText(message.text!, context);
+    return chatText(message.text ?? "", context);
   }
 
   Widget getChatMessageImageWidget(BuildContext context) {
@@ -282,7 +282,7 @@ class ChatMessageWidget extends StatelessWidget {
     attachmentImages.addAll(message.attachmentImages ?? []);
     return ChatMessageImage<AttachmentImages>(
       images: [],
-      isCurrentUserMessage: currentUser?.uid == message.user!.uid,
+      isCurrentUserMessage: currentUser?.uid == message.user?.uid,
       textMessage: getMessageTextWidget(context),
       messageDate: getMessageDateTime(),
       imageUrl: message.fileUrl,
