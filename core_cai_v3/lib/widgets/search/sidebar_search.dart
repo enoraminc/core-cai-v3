@@ -95,7 +95,7 @@ class _SideBarSearchWidgetState extends State<SideBarSearchWidget> {
                     border: InputBorder.none,
                     hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
                   ),
-                  cursorColor: Theme.of(context).cursorColor,
+                  cursorColor: Theme.of(context).textSelectionTheme.cursorColor,
                 ),
               ),
               if (widget.isShowFilter == true) ...[

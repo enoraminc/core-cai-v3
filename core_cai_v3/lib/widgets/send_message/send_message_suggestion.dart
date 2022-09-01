@@ -215,6 +215,7 @@ class _SendMessageSuggestionWidgetState
             width: MediaQuery.of(context).size.width,
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
@@ -251,7 +252,7 @@ class _SendMessageSuggestionWidgetState
                                         .inputDecorationTheme
                                         .hintStyle,
                                   ),
-                                  cursorColor: Theme.of(context).cursorColor,
+                                  cursorColor: Theme.of(context).textSelectionTheme.cursorColor,
                                   onSubmitted: (String str) {
                                     widget.onSend!;
                                   },
@@ -315,7 +316,6 @@ class _SendMessageSuggestionWidgetState
                   },
                 ),
               ],
-              crossAxisAlignment: CrossAxisAlignment.start,
             )
             // ),
             );

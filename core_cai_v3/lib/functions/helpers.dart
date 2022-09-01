@@ -53,13 +53,13 @@ class Helpers {
 
   static void showErrorSnackbar(
       GlobalKey<ScaffoldState> scaffoldKey, String error) {
-    scaffoldKey.currentState!.showSnackBar(
-      SnackBar(
-        content: Text(error),
-        backgroundColor: Colors.red,
-        duration: const Duration(seconds: 2),
-      ),
-    );
+    // scaffoldKey.currentState!.showSnackBar(
+    //   SnackBar(
+    //     content: Text(error),
+    //     backgroundColor: Colors.red,
+    //     duration: const Duration(seconds: 2),
+    //   ),
+    // );
   }
 
   static void showLoader(BuildContext context) {

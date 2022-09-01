@@ -78,21 +78,6 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
           body: _buildChat(),
         ),
       ),
-
-      // child: Builder(
-      //   builder: (context) {
-      //     if (currentChatId().isEmpty) {
-      //       return unselectedChatWidget(context);
-      //     }
-
-      //     return Scaffold(
-      //       key: _scaffoldKey,
-      //       drawerEdgeDragWidth: 0,
-      //       floatingActionButton: floatingActions(),
-      //       body: _buildChat(),
-      //     );
-      //   },
-      // ),
     );
   }
 
@@ -350,36 +335,44 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
                 ),
               ),
               actions: <Widget>[
-                RaisedButton(
-                  color: Colors.grey,
-                  textColor: Colors.white,
-                  child: const Padding(
-                    padding: EdgeInsets.only(),
-                    child: Text(
-                      "Cancel",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey,
                   ),
                   onPressed: () {
                     Navigator.of(context).pop(context);
                   },
-                ),
-                RaisedButton(
-                  color: Colors.red,
-                  textColor: Colors.white,
                   child: const Padding(
                     padding: EdgeInsets.only(),
                     child: Text(
-                      "Yes",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      "Cancel",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                     ),
+                  ),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
                   ),
                   onPressed: () {
                     onTap();
                     Navigator.of(context).pop(context);
                   },
+                  child: const Padding(
+                    padding: EdgeInsets.only(),
+                    child: Text(
+                      "Yes",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             );
