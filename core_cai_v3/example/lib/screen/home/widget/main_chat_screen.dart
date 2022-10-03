@@ -45,7 +45,7 @@ class _ChatScreenState extends BaseChatScreen<ChatScreen> {
             selectedData?.description ?? "",
             style: Theme.of(context).textTheme.subtitle1,
           ),
-          actions: [],
+          actions: const [],
         );
       },
     );
@@ -83,7 +83,7 @@ class _ChatScreenState extends BaseChatScreen<ChatScreen> {
           children: [
             Text(
               selectedData?.title ?? "-",
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
@@ -91,7 +91,7 @@ class _ChatScreenState extends BaseChatScreen<ChatScreen> {
             const SizedBox(height: 10),
             Text(
               selectedData?.description ?? "-",
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
               ),
             ),
@@ -160,7 +160,7 @@ class _ChatScreenState extends BaseChatScreen<ChatScreen> {
   }
 
   @override
-  Widget getCustomMessageChatWidget(String msgType) {
+  Widget getCustomMessageChatWidget(ChatMessage message) {
     return Container();
   }
 }

@@ -4,6 +4,7 @@ showCustomBottomSheet(
   BuildContext context, {
   required Widget Function(BuildContext context, StateSetter setState) body,
   String? title,
+  Color? backgroundColor,
 }) async {
   showModalBottomSheet(
     shape: const RoundedRectangleBorder(
@@ -48,7 +49,8 @@ showCustomBottomSheet(
                         controller: scrollController,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Theme.of(context).backgroundColor,
+                            color: backgroundColor ??
+                                Theme.of(context).backgroundColor,
                             shape: BoxShape.rectangle,
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(10),
@@ -67,13 +69,13 @@ showCustomBottomSheet(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Row(
                                   children: [
                                     Expanded(
                                       child: Text(
                                         title ?? "Detail",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                           // color: Theme.of(context)
@@ -94,7 +96,7 @@ showCustomBottomSheet(
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 body(
                                   context,
                                   setModalState,

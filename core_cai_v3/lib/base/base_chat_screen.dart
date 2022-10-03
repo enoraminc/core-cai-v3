@@ -1,10 +1,16 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
-import 'package:collection/collection.dart';
 import 'package:core_cai_v3/model/chat_user.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:progress_indicators/progress_indicators.dart';
+
 import '../bloc/chat_message/chat_message_bloc.dart';
 import '../functions/app_colors.dart';
 import '../functions/commons_utils.dart';
@@ -15,22 +21,10 @@ import '../functions/strings.dart';
 import '../model/chat_message.dart';
 import '../widget_utils/dropzone_widget.dart';
 import '../widgets/bottom_sheet/bottom_sheet.dart';
-import '../widgets/chat_item_screen.dart';
-import '../widgets/chat_message/chat_message_header.dart';
 import '../widgets/chat_message/chat_message_widget.dart';
 import '../widgets/chat_message/chat_messages_widget.dart';
-import '../widgets/search/sidebar_search.dart';
 import '../widgets/send_message/flutter_mention/flutter_mentions.dart';
 import '../widgets/send_message/send_message_suggestion.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 
 abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
     with SingleTickerProviderStateMixin {
@@ -57,7 +51,7 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
   Widget floatingActionsWidget();
   Widget detailContentsWidget();
   Widget appBar();
-  Widget getCustomMessageChatWidget(String msgType);
+  Widget getCustomMessageChatWidget(ChatMessage message);
 
   ChatUser? getUser();
   Future<String?> uploadMediaMessage(Uint8List data,
@@ -331,7 +325,7 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
                 height: 80,
                 child: Text(
                   description,
-                  style: TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16),
                 ),
               ),
               actions: <Widget>[
@@ -689,9 +683,9 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
   }
 
   Future<Image> getImageThumbnail(XFile file) async {
-    final Uint8List? bytes = await file.readAsBytes();
+    final Uint8List bytes = await file.readAsBytes();
     return Image.memory(
-      bytes!,
+      bytes,
       height: CustomFunctions.isMobile(context) ? 75 : 100,
       width: CustomFunctions.isMobile(context) ? 75 : 100,
       fit: BoxFit.cover,
