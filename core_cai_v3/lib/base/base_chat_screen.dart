@@ -850,9 +850,11 @@ class FloatingButton extends StatelessWidget {
   final String title;
   final Function() onTap;
   final IconData icon;
+  final Color backgroundColor;
 
   const FloatingButton({
     Key? key,
+    this.backgroundColor = AppColors.primaryColorLight,
     required this.title,
     required this.onTap,
     required this.icon,
@@ -864,7 +866,7 @@ class FloatingButton extends StatelessWidget {
       tooltip: title,
       hoverElevation: 0.0,
       elevation: 0.0,
-      backgroundColor: AppColors.primaryColorLight,
+      backgroundColor: backgroundColor,
       onPressed: onTap,
       heroTag: title.trim().toLowerCase(),
       child: Icon(

@@ -1,5 +1,6 @@
-import '../../functions/custom_function.dart';
 import 'package:flutter/material.dart';
+
+import '../../functions/custom_function.dart';
 
 class NewSideBarSearchWidget extends StatefulWidget {
   final TextEditingController? searchController;
@@ -12,6 +13,7 @@ class NewSideBarSearchWidget extends StatefulWidget {
   final Function() onTap;
   final bool? isBackShow;
   final bool isAutoShowFilter;
+  final Function(BuildContext context) isMobile;
   const NewSideBarSearchWidget({
     Key? key,
     required this.filters,
@@ -21,6 +23,7 @@ class NewSideBarSearchWidget extends StatefulWidget {
     this.isShowBorder = true,
     this.isAutoShowFilter = false,
     this.hint = "Search...",
+    this.isMobile = CustomFunctions.isMobile,
     required this.onTap,
     this.isBackShow = true,
   }) : super(key: key);
@@ -42,32 +45,31 @@ class _NewSideBarSearchWidgetState extends State<NewSideBarSearchWidget> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
-          margin: (CustomFunctions.isMobile(context) ||
-                  widget.isShowBorder == false)
+          margin: (widget.isMobile(context) || widget.isShowBorder == false)
               ? null
-              : EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+              : const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
           decoration: BoxDecoration(
               color: Theme.of(context).appBarTheme.backgroundColor,
-              borderRadius: (CustomFunctions.isMobile(context) ||
-                      widget.isShowBorder == false)
-                  ? null
-                  : BorderRadius.circular(20.0)),
+              borderRadius:
+                  (widget.isMobile(context) || widget.isShowBorder == false)
+                      ? null
+                      : BorderRadius.circular(20.0)),
           child: Row(
             children: [
               const SizedBox(
                 width: 5.0,
               ),
               InkWell(
-                onTap: (CustomFunctions.isMobile(context) ||
-                        widget.isShowBorder == false)
-                    ? () {
-                        widget.onSearchBack!();
-                      }
-                    : null,
+                onTap:
+                    (widget.isMobile(context) || widget.isShowBorder == false)
+                        ? () {
+                            widget.onSearchBack!();
+                          }
+                        : null,
                 child: widget.isBackShow == false
                     ? Container()
                     : Icon(
-                        (CustomFunctions.isMobile(context) ||
+                        (widget.isMobile(context) ||
                                 widget.isShowBorder == false)
                             ? Icons.arrow_back
                             : Icons.search,
@@ -76,7 +78,7 @@ class _NewSideBarSearchWidgetState extends State<NewSideBarSearchWidget> {
                       ),
               ),
               SizedBox(
-                width: CustomFunctions.isMobile(context) ? 25 : 5.0,
+                width: widget.isMobile(context) ? 25 : 5.0,
               ),
               Expanded(
                 child: TextField(
@@ -166,7 +168,7 @@ class _NewSideBarSearchWidgetState extends State<NewSideBarSearchWidget> {
                     if (filter.customLabel != null) {
                       customLabel = filter.customLabel!(text);
                     }
-                    Color backgroundColorChip = Color(0xFF616161);
+                    Color backgroundColorChip = const Color(0xFF616161);
                     if (selected) {
                       backgroundColorChip = Colors.green[400]!;
                     }
@@ -213,7 +215,7 @@ class _NewSideBarSearchWidgetState extends State<NewSideBarSearchWidget> {
                   },
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
             ],
           );
         }).toList(),
