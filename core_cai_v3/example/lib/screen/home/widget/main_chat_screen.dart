@@ -160,7 +160,7 @@ class _ChatScreenState extends BaseChatScreen<ChatScreen> {
   }
 
   @override
-  Widget getCustomMessageChatWidget(String msgType) {
+  Widget getCustomMessageChatWidget(String msgType,ChatMessage message) {
     return Container();
   }
 }

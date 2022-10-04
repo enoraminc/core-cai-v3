@@ -16,7 +16,8 @@ class ChatMessageWidget extends StatelessWidget {
   final List<ChatMessage> deleteMessage;
   final ChatUser? currentUser;
 
-  final Widget Function(String msgType) getCustomChatMessageWidget;
+  final Widget Function(String msgType, ChatMessage message)
+      getCustomChatMessageWidget;
 
   const ChatMessageWidget(
     this.message,
@@ -180,11 +181,38 @@ class ChatMessageWidget extends StatelessWidget {
   }
 
   Widget getMessageDateTime() {
-    return Text(
-      DateFormat('d MMM hh:mm a').format(
-        (DateTime.fromMillisecondsSinceEpoch(message.createdAt! as int)),
-      ),
-      style: const TextStyle(fontSize: 10, color: Colors.grey),
+    return Wrap(
+      spacing: 5,
+      alignment: WrapAlignment.center,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        message.isPending()
+            ? Icon(
+                Icons.access_time,
+                size: 15,
+              )
+            : message.isFailed()
+                ? Icon(
+                    Icons.info_outline,
+                    size: 15,
+                    color: Colors.red,
+                  )
+                : Icon(
+                    Icons.check,
+                    size: 15,
+                  ),
+        Text(
+          DateFormat('d MMM hh:mm a').format(
+            (DateTime.fromMillisecondsSinceEpoch(
+                (message.createdAt ?? 0).toInt())),
+          ),
+          style: const TextStyle(fontSize: 10, color: Colors.grey),
+        ),
+        // Text(
+        //   (message.createdAt ?? 0).toString(),
+        //   style: const TextStyle(fontSize: 10, color: Colors.grey),
+        // ),
+      ],
     );
   }
 
@@ -200,7 +228,7 @@ class ChatMessageWidget extends StatelessWidget {
     } else if (message.msgType == ChatMessage.msgFile) {
       return getMessageFileWidget(context);
     } else {
-      return getCustomChatMessageWidget(message.msgType ?? "");
+      return getCustomChatMessageWidget(message.msgType ?? "", message);
     }
     // return Container();
   }
@@ -290,6 +318,7 @@ class ChatMessageWidget extends StatelessWidget {
       getImageUrl: (AttachmentImages attachmentImages) {
         return attachmentImages.fileUrl ?? "";
       },
+      imageCachedList: message.imageCacheList,
     );
   }
 

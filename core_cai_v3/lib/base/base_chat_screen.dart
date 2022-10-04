@@ -57,7 +57,7 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
   Widget floatingActionsWidget();
   Widget detailContentsWidget();
   Widget appBar();
-  Widget getCustomMessageChatWidget(String msgType);
+  Widget getCustomMessageChatWidget(String msgType, ChatMessage message);
 
   ChatUser? getUser();
   Future<String?> uploadMediaMessage(Uint8List data,
@@ -89,6 +89,10 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
             contentPath: currentChatId(),
             user: user,
             locale: '',
+            selectedFileName: selectedFileName,
+            selectedFileType: selectedFileType,
+            selectedFiles: selectedFile,
+            selectedImages: selectedImages,
           ),
         );
     setState(() {
@@ -170,19 +174,19 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
                     getMediaFile(),
                   if (selectedFile != null && messageType == ChatMessage.video)
                     getMediaFile(),
-                  if (isLoading) ...[
-                    const Text(""),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 20),
-                        child: JumpingDotsProgressIndicator(
-                          fontSize: 40.0,
-                          color: AppColors.primaryColorLight,
-                        ),
-                      ),
-                    ),
-                  ],
+                  // if (isLoading) ...[
+                  //   const Text(""),
+                  //   Align(
+                  //     alignment: Alignment.bottomRight,
+                  //     child: Padding(
+                  //       padding: const EdgeInsets.only(right: 20),
+                  //       child: JumpingDotsProgressIndicator(
+                  //         fontSize: 40.0,
+                  //         color: AppColors.primaryColorLight,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ],
                 ],
               ),
             ),
@@ -405,7 +409,7 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
             UpperCaseTextFormatter(),
           ],
           sendMessageController: sendMessageController,
-          enable: !isLoading,
+          enable: true,
           mentions: [
             Mention(
               disableMarkup: true,
@@ -802,19 +806,10 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
   Future<void> sendImageMessage(ChatUser user) async {
     // addChatMessageBloc.add(ShowLoadingEvent(true));
     final textData = sendMessageController.text;
-    List<AttachmentImages> attachmentImages = [];
+    List<Uint8List> attachmentImagesCached = [];
     for (XFile imageFile in selectedImages) {
       final Uint8List bytes = await imageFile.readAsBytes();
-      String? fileUrl = await uploadMediaMessage(bytes);
-      if (fileUrl != null) {
-        attachmentImages.add(
-          AttachmentImages(
-            name: imageFile.name,
-            type: imageFile.name.split(".").last,
-            fileUrl: fileUrl,
-          ),
-        );
-      }
+      attachmentImagesCached.add(bytes);
     }
 
     ChatMessage chatMessage = ChatMessage(
@@ -823,19 +818,17 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
       textWithMention: textData,
       createdAt: DateTime.now().millisecondsSinceEpoch,
       fileUrl: null,
-      attachmentImages: attachmentImages,
       users: [],
       fileName: selectedFileName,
       fileType: selectedFileType,
+      imageCacheList: attachmentImagesCached,
     );
     _sendMessage(chatMessage, user);
   }
 
   Future<void> sendFileMessage(ChatUser user) async {
     final textData = sendMessageController.text;
-    List<AttachmentImages> attachmentImages = [];
-    String? fileUrl = await uploadMediaMessage(
-        selectedFile!, selectedFileName!.split(".").last);
+
     ChatMessage chatMessage = ChatMessage();
     chatMessage = ChatMessage(
       msgType: ChatMessage.msgFile,
@@ -843,7 +836,6 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
       text: textData,
       textWithMention: textData,
       createdAt: DateTime.now().millisecondsSinceEpoch,
-      fileUrl: fileUrl,
       users: [],
       fileName: selectedFileName,
       fileType: selectedFileType,

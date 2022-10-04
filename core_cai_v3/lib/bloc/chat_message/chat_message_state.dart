@@ -6,12 +6,14 @@ class ChatMessageState {
   final bool isLoadingSend;
   final List<ChatMessage> messages;
   final List<ChatMessage> deleteMessages;
+  final List<ChatMessage> pendingMessages;
 
   const ChatMessageState({
     this.isLoading = false,
     this.messages = const [],
     this.isLoadingSend = false,
     this.deleteMessages = const [],
+    this.pendingMessages = const [],
   });
 
   ChatMessageState copyWith({
@@ -19,12 +21,14 @@ class ChatMessageState {
     List<ChatMessage>? messages,
     bool? isLoadingSend,
     List<ChatMessage>? deleteMessages,
+    List<ChatMessage>? pendingMessages,
   }) {
     return ChatMessageState(
       isLoading: isLoading ?? this.isLoading,
       messages: messages ?? this.messages,
       isLoadingSend: isLoadingSend ?? this.isLoadingSend,
       deleteMessages: deleteMessages ?? this.deleteMessages,
+      pendingMessages: pendingMessages ?? this.pendingMessages,
     );
   }
 }

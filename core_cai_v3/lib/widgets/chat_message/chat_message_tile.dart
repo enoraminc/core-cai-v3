@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import '../../widget_utils/image_carousel_slider.dart';
 import '../../widget_utils/image_widget.dart';
 import 'package:flutter/material.dart';
@@ -101,17 +103,21 @@ class ChatMessageImage<ImageList> extends StatelessWidget {
   final String Function(ImageList) getImageUrl;
   final List<String> images;
   final Widget? replayMessageBody;
-  const ChatMessageImage(
-      {Key? key,
-      required this.textMessage,
-      required this.messageDate,
-      required this.isCurrentUserMessage,
-      this.imageUrl,
-      required this.imageList,
-      required this.getImageUrl,
-      required this.images,
-      this.replayMessageBody})
-      : super(key: key);
+
+  final List<Uint8List> imageCachedList;
+
+  const ChatMessageImage({
+    Key? key,
+    required this.textMessage,
+    required this.messageDate,
+    required this.isCurrentUserMessage,
+    this.imageUrl,
+    required this.imageList,
+    required this.getImageUrl,
+    required this.images,
+    this.replayMessageBody,
+    this.imageCachedList = const [],
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +129,9 @@ class ChatMessageImage<ImageList> extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           child: InkWell(
             onTap: () {
-              showImage(context, images);
+              if (imageCachedList.isEmpty) {
+                showImage(context, images);
+              }
             },
             child: Center(
               child: Padding(
@@ -139,41 +147,91 @@ class ChatMessageImage<ImageList> extends StatelessWidget {
                     // SizedBox(
                     //   height: 1 * SizeConfig.heightMultiplier,
                     // ),
+
                     if (replayMessageBody != null) ...[
                       replayMessageBody!,
                       SizedBox(height: 8),
                     ],
-                    if (imageList.length == 1) ...[
-                      ImageWidget(
-                        url: getImageUrl(imageList[0]),
-                      ),
-                    ] else if (imageList.length == 3 ||
-                        imageList.length == 2) ...[
-                      getImageItems(
-                          getImageUrl(imageList[0]),
-                          getImageUrl(imageList[1]),
-                          imageList.length - 2,
-                          context),
-                    ] else if (imageList.length == 4) ...[
-                      getImageItems(getImageUrl(imageList[0]),
-                          getImageUrl(imageList[1]), 0, context),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      getImageItems(getImageUrl(imageList[2]),
-                          getImageUrl(imageList[3]), 0, context),
-                    ] else if (imageList.length > 4) ...[
-                      getImageItems(getImageUrl(imageList[0]),
-                          getImageUrl(imageList[1]), 0, context),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      getImageItems(
-                          getImageUrl(imageList[2]),
-                          getImageUrl(imageList[3]),
+                    if (imageCachedList.isNotEmpty) ...[
+                      if (imageCachedList.length == 1) ...[
+                        ImageMemoryWidget(
+                          url: imageCachedList[0],
+                        ),
+                      ] else if (imageCachedList.length == 3 ||
+                          imageCachedList.length == 2) ...[
+                        getImageMemoryItems(
+                          imageCachedList[0],
+                          imageCachedList[1],
+                          imageCachedList.length - 2,
+                          context,
+                        ),
+                      ] else if (imageCachedList.length == 4) ...[
+                        getImageMemoryItems(
+                          imageCachedList[0],
+                          imageCachedList[1],
+                          0,
+                          context,
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        getImageMemoryItems(
+                          imageCachedList[2],
+                          imageCachedList[3],
+                          0,
+                          context,
+                        ),
+                      ] else if (imageCachedList.length > 4) ...[
+                        getImageMemoryItems(
+                          imageCachedList[0],
+                          imageCachedList[1],
+                          0,
+                          context,
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        getImageMemoryItems(
+                          imageCachedList[2],
+                          imageCachedList[3],
                           imageList.length - 4,
-                          context),
+                          context,
+                        ),
+                      ],
+                    ] else ...[
+                      if (imageList.length == 1) ...[
+                        ImageWidget(
+                          url: getImageUrl(imageList[0]),
+                        ),
+                      ] else if (imageList.length == 3 ||
+                          imageList.length == 2) ...[
+                        getImageItems(
+                            getImageUrl(imageList[0]),
+                            getImageUrl(imageList[1]),
+                            imageList.length - 2,
+                            context),
+                      ] else if (imageList.length == 4) ...[
+                        getImageItems(getImageUrl(imageList[0]),
+                            getImageUrl(imageList[1]), 0, context),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        getImageItems(getImageUrl(imageList[2]),
+                            getImageUrl(imageList[3]), 0, context),
+                      ] else if (imageList.length > 4) ...[
+                        getImageItems(getImageUrl(imageList[0]),
+                            getImageUrl(imageList[1]), 0, context),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        getImageItems(
+                            getImageUrl(imageList[2]),
+                            getImageUrl(imageList[3]),
+                            imageList.length - 4,
+                            context),
+                      ],
                     ],
+
                     // SizedBox(
                     //   height: 1 * SizeConfig.heightMultiplier,
                     // ),
@@ -253,7 +311,8 @@ class ChatMessageImage<ImageList> extends StatelessWidget {
     // );
   }
 
-  Widget getImageItems(img_path, img_path2, count, BuildContext context) {
+  Widget getImageItems(
+      String img_path, String img_path2, count, BuildContext context) {
     double sizeHeightWidth =
         MediaQuery.of(context).size.width > 600 ? (480 / 2) : 100;
     return SizedBox(
@@ -309,6 +368,74 @@ class ChatMessageImage<ImageList> extends StatelessWidget {
               : ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
                   child: Image.network(
+                    img_path2,
+                    height: sizeHeightWidth,
+                    width: sizeHeightWidth,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+        ],
+      ),
+    );
+  }
+
+  Widget getImageMemoryItems(
+      Uint8List img_path, Uint8List img_path2, count, BuildContext context) {
+    double sizeHeightWidth =
+        MediaQuery.of(context).size.width > 600 ? (480 / 2) : 100;
+    return SizedBox(
+      width: MediaQuery.of(context).size.width > 600 ? 500 : 600 - 50,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10.0),
+            child: Image.memory(
+              img_path,
+              height: sizeHeightWidth,
+              width: sizeHeightWidth,
+              fit: BoxFit.cover,
+            ),
+          ),
+          const Spacer(),
+          (count > 0)
+              ? Stack(
+                  // overflow: Overflow.visible,
+                  children: <Widget>[
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.memory(
+                        img_path2,
+                        height: sizeHeightWidth,
+                        width: sizeHeightWidth,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    (count > 0)
+                        ? Positioned(
+                            child: Container(
+                              height: sizeHeightWidth,
+                              width: sizeHeightWidth,
+                              decoration: BoxDecoration(
+                                  color: Colors.black38,
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              child: Center(
+                                child: Text(
+                                  "+ $count",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 42,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : const Center()
+                  ],
+                )
+              : ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0),
+                  child: Image.memory(
                     img_path2,
                     height: sizeHeightWidth,
                     width: sizeHeightWidth,

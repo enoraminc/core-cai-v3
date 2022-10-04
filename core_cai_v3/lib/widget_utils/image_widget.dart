@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +13,42 @@ class ImageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ExtendedImage.network(
       url ?? "",
+      width: MediaQuery.of(context).size.width > 600 ? 480 : 600,
+      filterQuality: FilterQuality.high,
+      loadStateChanged: (state) {
+        switch (state.extendedImageLoadState) {
+          case LoadState.completed:
+            return null;
+          case LoadState.failed:
+            return const Icon(Icons.error, size: 28);
+          case LoadState.loading:
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                SizedBox(
+                  height: 10,
+                  width: 10,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                  ),
+                ),
+              ],
+            );
+        }
+      },
+      fit: BoxFit.fill,
+    );
+  }
+}
+
+class ImageMemoryWidget extends StatelessWidget {
+  final Uint8List url;
+  const ImageMemoryWidget({Key? key, required this.url}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ExtendedImage.memory(
+      url,
       width: MediaQuery.of(context).size.width > 600 ? 480 : 600,
       filterQuality: FilterQuality.high,
       loadStateChanged: (state) {

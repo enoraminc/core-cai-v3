@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:core_cai_v3/base/base_chat_screen.dart';
 import 'package:core_cai_v3/functions/custom_function.dart';
+import 'package:core_cai_v3/model/chat_message.dart';
 import 'package:core_cai_v3/model/chat_user.dart';
 import 'package:core_cai_v3/widgets/chat_item_screen.dart';
 import 'package:core_cai_v3/widgets/chat_message/chat_message_header.dart';

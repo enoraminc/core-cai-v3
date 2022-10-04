@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'chat_user.dart';
 
 class ChatMessage {
@@ -31,6 +33,18 @@ class ChatMessage {
   final String? fileName;
   final List<AttachmentImages>? attachmentImages;
 
+  final String? state;
+  final String? groupId;
+
+  final List<Uint8List> imageCacheList;
+
+  static String pendingState = "Pending";
+  static String successState = "Success";
+  static String failedState = "Failed";
+
+  bool isPending() => state == pendingState;
+  bool isFailed() => state == failedState;
+
   ChatMessage({
     this.id,
     this.text,
@@ -51,6 +65,9 @@ class ChatMessage {
     this.googleMeetLink,
     this.fileName,
     this.attachmentImages,
+    this.state,
+    this.groupId,
+    this.imageCacheList = const [],
   });
 
   Map<String, dynamic> toMap() {
@@ -73,6 +90,8 @@ class ChatMessage {
       'fileName': fileName,
       'otherData': otherData,
       'attachmentImages': attachmentImages?.map((e) => e.toJson()).toList(),
+      'state': state,
+      'groupId': groupId,
     };
   }
 
@@ -116,6 +135,8 @@ class ChatMessage {
       fileName: map['fileName'],
       otherData: map['otherData'],
       attachmentImages: attachmentImagesList,
+      state: map['state'],
+      groupId: map['groupId'],
     );
   }
 
@@ -139,6 +160,9 @@ class ChatMessage {
     String? googleMeetLink,
     String? fileName,
     List<AttachmentImages>? attachmentImages,
+    String? state,
+    String? groupId,
+    List<Uint8List>? imageCacheList,
   }) {
     return ChatMessage(
       id: id ?? this.id,
@@ -160,6 +184,9 @@ class ChatMessage {
       googleMeetLink: googleMeetLink ?? this.googleMeetLink,
       fileName: fileName ?? this.fileName,
       attachmentImages: attachmentImages ?? this.attachmentImages,
+      state: state ?? this.state,
+      groupId: groupId ?? this.groupId,
+      imageCacheList: imageCacheList ?? this.imageCacheList,
     );
   }
 

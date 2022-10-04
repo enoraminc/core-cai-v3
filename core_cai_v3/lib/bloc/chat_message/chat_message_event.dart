@@ -27,11 +27,24 @@ class CreateMessage extends ChatMessageEvent {
   final String contentPath;
   final String locale;
   final ChatUser user;
-  CreateMessage(
-      {required this.message,
-      required this.contentPath,
-      required this.locale,
-      required this.user});
+
+  final List<XFile> selectedImages;
+  final Uint8List? selectedFiles;
+  final Uint8List? selectedVideos;
+  final String? selectedFileName;
+  final String? selectedFileType;
+
+  CreateMessage({
+    required this.message,
+    required this.contentPath,
+    required this.locale,
+    required this.user,
+    this.selectedImages = const [],
+    this.selectedFiles,
+    this.selectedVideos,
+    this.selectedFileName,
+    this.selectedFileType,
+  });
 }
 
 class UpdateLastMessageEvent extends ChatMessageEvent {
