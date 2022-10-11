@@ -30,7 +30,7 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
     with SingleTickerProviderStateMixin {
   late final FocusNode focusNode = FocusNode(onKey: handleKeyPress);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final ScrollController _scrollController =
+  final ScrollController scrollController =
       ScrollController(initialScrollOffset: 0.0);
 
   final ImagePicker _picker = ImagePicker();
@@ -149,7 +149,7 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
         child: Column(
           children: [
             appBar(),
-            Expanded(child: _buildMessagesList()),
+            Expanded(child: buildMessagesList()),
             Padding(
               padding: const EdgeInsets.only(left: 12),
               child: Row(
@@ -189,7 +189,7 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
               height: 8,
             ),
             // currentUser != null ?
-            _buildMessageComposer()
+            buildMessageComposer()
             //  : Container(),
           ],
         ),
@@ -197,14 +197,14 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
     });
   }
 
-  Widget _buildMessagesList() {
+  Widget buildMessagesList() {
     return Builder(
       builder: (context) {
         final messages =
             context.select((ChatMessageBloc element) => element.state.messages);
 
         return ChatMessagesWidget<ChatMessage>(
-          scrollController: _scrollController,
+          scrollController: scrollController,
           messages: messages,
           isDisplayDateHeader: (int index) =>
               isDisplayDateHeader(index, messages),
@@ -376,7 +376,7 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
     );
   }
 
-  Widget _buildMessageComposer() {
+  Widget buildMessageComposer() {
     return Builder(builder: (context) {
       final isLoading = context
           .select((ChatMessageBloc element) => element.state.isLoadingSend);

@@ -59,9 +59,9 @@ class ChatMessageWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10.0),
             constraints: BoxConstraints(
-              maxWidth: CustomFunctions.isMobile(context)
-                  ? ((CustomFunctions.getMediaWidth(context)) - 100)
-                  : ((CustomFunctions.getMediaWidth(context) / 2) - 5),
+              maxWidth: isMobile(context)
+                  ? ((getMediaWidth(context)) - 100)
+                  : ((getMediaWidth(context) / 2) - 5),
             ),
             decoration: BoxDecoration(
                 color: (!CustomFunctions.isDarkTheme(context))
@@ -291,6 +291,18 @@ class ChatMessageWidget extends StatelessWidget {
         return attachmentImages.fileUrl ?? "";
       },
     );
+  }
+
+  bool isMobile(BuildContext context) {
+    return CustomFunctions.isMobile(context);
+  }
+
+  bool isDarkTheme(BuildContext context) {
+    return CustomFunctions.isDarkTheme(context);
+  }
+
+  double getMediaWidth(BuildContext context) {
+    return CustomFunctions.getMediaWidth(context);
   }
 
   void showImage(BuildContext context) {
