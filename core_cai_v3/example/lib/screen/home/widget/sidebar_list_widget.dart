@@ -41,7 +41,7 @@ class SideBarListWidget extends StatelessWidget {
                 child: const Icon(Icons.add),
               );
               // }
-              return SizedBox();
+              return const SizedBox();
             },
           ),
           body: Column(
@@ -120,10 +120,10 @@ class SideBarListWidget extends StatelessWidget {
                   text: TextSpan(
                     style: Theme.of(context).textTheme.bodyText1,
                     text: "Core CAI Boilerplate",
-                    children: [
+                    children: const [
                       TextSpan(
                         text: " v 0.0.1",
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
                         ),
                       ),

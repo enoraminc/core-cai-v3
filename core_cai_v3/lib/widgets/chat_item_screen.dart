@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
 
 class ChatItemScreen<Item> extends StatelessWidget {
-  
   final List<Item> items;
-  final Widget Function(Item item) leadingWidget;
+  final Widget Function(Item item)? leadingWidget;
   final String Function(Item item) itemTitle;
   final String Function(Item item) subTitle;
   final Widget? Function(Item item)? subTitle2;
-  final bool Function(Item item)? isCurrentSelected;
+  final bool Function(Item item) isCurrentSelected;
   final Widget? Function(Item item)? trailingWidget;
   final Function(Item item) onTapItem;
+  final Widget Function(
+      Item item, bool isSelected, Function(Item item) onTapItem)? itemBuilder;
   final bool isForwardMessage;
 
   const ChatItemScreen(
       {Key? key,
       required this.items,
-      required this.leadingWidget,
-      this.trailingWidget,
       required this.itemTitle,
       required this.subTitle,
-      this.subTitle2,
       required this.isCurrentSelected,
       required this.onTapItem,
+      this.leadingWidget,
+      this.trailingWidget,
+      this.subTitle2,
+      this.itemBuilder,
       this.isForwardMessage = false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return isForwardMessage == true ? ForwardMessage() : SimpleMessage();
+    return isForwardMessage ? ForwardMessage() : SimpleMessage();
   }
 
   Widget SimpleMessage() {
@@ -39,12 +41,14 @@ class ChatItemScreen<Item> extends StatelessWidget {
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
         final Item item = items[index];
+        if (itemBuilder != null) {
+          return itemBuilder!(item, isCurrentSelected(item), onTapItem);
+        }
         return Container(
-          color: isCurrentSelected!(item)
-              ? Theme.of(context).highlightColor
-              : null,
+          color:
+              isCurrentSelected(item) ? Theme.of(context).highlightColor : null,
           child: ListTile(
-            leading: leadingWidget(item),
+            leading: leadingWidget?.call(item),
             title: Text(
               itemTitle(item),
               style: Theme.of(context).textTheme.bodyText1,
@@ -70,8 +74,7 @@ class ChatItemScreen<Item> extends StatelessWidget {
                 ],
               ),
             ),
-            trailing:
-                (trailingWidget!(item) != null) ? trailingWidget!(item) : null,
+            trailing: trailingWidget?.call(item),
             onTap: () {
               onTapItem(item);
             },
@@ -92,7 +95,7 @@ class ChatItemScreen<Item> extends StatelessWidget {
         return Container(
           color: Colors.yellow,
           child: ListTile(
-            leading: Text("Leading"),
+            leading: const Text("Leading"),
             title: Text(
               '$index',
               style: Theme.of(context).textTheme.bodyText1,

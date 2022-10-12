@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../bloc/chat_message/chat_message_bloc.dart';
 import '../../functions/app_colors.dart';
@@ -8,16 +10,13 @@ import '../../model/chat_message.dart';
 import '../../model/chat_user.dart';
 import '../../widget_utils/text_util.dart';
 import '../../widgets/chat_message/chat_message_tile.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class ChatMessageWidget extends StatelessWidget {
   final ChatMessage message;
   final List<ChatMessage> deleteMessage;
   final ChatUser? currentUser;
 
-  final Widget Function(String msgType, ChatMessage message)
-      getCustomChatMessageWidget;
+  final Widget Function(ChatMessage message) getCustomChatMessageWidget;
 
   const ChatMessageWidget(
     this.message,
@@ -59,13 +58,10 @@ class ChatMessageWidget extends StatelessWidget {
           ],
           Container(
             padding: const EdgeInsets.all(10.0),
-            child: ClipRRect(
-              child: getChatMessageWidget(context),
-            ),
             constraints: BoxConstraints(
-              maxWidth: CustomFunctions.isMobile(context)
-                  ? ((CustomFunctions.getMediaWidth(context)) - 100)
-                  : ((CustomFunctions.getMediaWidth(context) / 2) - 5),
+              maxWidth: isMobile(context)
+                  ? ((getMediaWidth(context)) - 100)
+                  : ((getMediaWidth(context) / 2) - 5),
             ),
             decoration: BoxDecoration(
                 color: (!CustomFunctions.isDarkTheme(context))
@@ -76,6 +72,9 @@ class ChatMessageWidget extends StatelessWidget {
                         ? AppColors.isMeChatWidgetDark
                         : AppColors.chatWidgetDark,
                 borderRadius: BorderRadius.circular(12)),
+            child: ClipRRect(
+              child: getChatMessageWidget(context),
+            ),
           ),
           if (currentUser?.uid == message.user?.uid) ...[
             const SizedBox(
@@ -228,7 +227,7 @@ class ChatMessageWidget extends StatelessWidget {
     } else if (message.msgType == ChatMessage.msgFile) {
       return getMessageFileWidget(context);
     } else {
-      return getCustomChatMessageWidget(message.msgType ?? "", message);
+      return getCustomChatMessageWidget(message);
     }
     // return Container();
   }
@@ -309,7 +308,7 @@ class ChatMessageWidget extends StatelessWidget {
     }
     attachmentImages.addAll(message.attachmentImages ?? []);
     return ChatMessageImage<AttachmentImages>(
-      images: [],
+      images: const [],
       isCurrentUserMessage: currentUser?.uid == message.user?.uid,
       textMessage: getMessageTextWidget(context),
       messageDate: getMessageDateTime(),
@@ -322,6 +321,18 @@ class ChatMessageWidget extends StatelessWidget {
     );
   }
 
+  bool isMobile(BuildContext context) {
+    return CustomFunctions.isMobile(context);
+  }
+
+  bool isDarkTheme(BuildContext context) {
+    return CustomFunctions.isDarkTheme(context);
+  }
+
+  double getMediaWidth(BuildContext context) {
+    return CustomFunctions.getMediaWidth(context);
+  }
+
   void showImage(BuildContext context) {
     showDialog(
       context: context,
@@ -331,6 +342,7 @@ class ChatMessageWidget extends StatelessWidget {
           child: Column(
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Align(
                     alignment: Alignment.topRight,
@@ -342,7 +354,6 @@ class ChatMessageWidget extends StatelessWidget {
                     ),
                   ),
                 ],
-                mainAxisAlignment: MainAxisAlignment.end,
               ),
               Expanded(
                 child: Align(
