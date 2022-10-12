@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 
 import 'core/blocs/api_impl/chat_message_api_impl.dart';
+import 'core/blocs/api_impl/upload_media_api_impl.dart';
 import 'core/blocs/main_screen/main_screen_bloc.dart';
 import 'core/blocs/sidebar/sidebar_bloc.dart';
 import 'core/utils/themes.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<ChatMessageBloc>(
           create: (_) => ChatMessageBloc(
             ChatMessageApiImpl(),
+            UploadMediaApiImpl(),
           ),
         ),
         BlocProvider<ExampleCubit>(create: (_) => ExampleCubit()),
