@@ -186,17 +186,17 @@ class ChatMessageWidget extends StatelessWidget {
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         message.isPending()
-            ? Icon(
+            ? const Icon(
                 Icons.access_time,
                 size: 15,
               )
             : message.isFailed()
-                ? Icon(
+                ? const Icon(
                     Icons.info_outline,
                     size: 15,
                     color: Colors.red,
                   )
-                : Icon(
+                : const Icon(
                     Icons.check,
                     size: 15,
                   ),

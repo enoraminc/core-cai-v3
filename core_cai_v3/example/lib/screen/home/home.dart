@@ -2,9 +2,11 @@ import 'dart:typed_data';
 
 import 'package:core_cai_v3/base/base_cai_screen.dart';
 import 'package:core_cai_v3/base/base_chat_screen.dart';
+import 'package:core_cai_v3/functions/commons_utils.dart';
 import 'package:core_cai_v3/functions/custom_function.dart';
 import 'package:core_cai_v3/model/chat_message.dart';
 import 'package:core_cai_v3/model/chat_user.dart';
+import 'package:core_cai_v3/widget_utils/dropzone_widget.dart';
 import 'package:core_cai_v3/widgets/chat_item_screen.dart';
 import 'package:core_cai_v3/widgets/chat_message/chat_message_header.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:core_cai_v3/functions/format_utils.dart';
 import 'package:core_cai_v3/model/chat_user.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -9,17 +10,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:progress_indicators/progress_indicators.dart';
 
 import '../bloc/chat_message/chat_message_bloc.dart';
 import '../functions/app_colors.dart';
-import '../functions/commons_utils.dart';
 import '../functions/constant_image.dart';
 import '../functions/custom_function.dart';
 import '../functions/helpers.dart';
 import '../functions/strings.dart';
 import '../model/chat_message.dart';
-import '../widget_utils/dropzone_widget.dart';
+// import '../widget_utils/dropzone_widget.dart';
 import '../widgets/bottom_sheet/bottom_sheet.dart';
 import '../widgets/chat_message/chat_message_widget.dart';
 import '../widgets/chat_message/chat_messages_widget.dart';
@@ -52,6 +51,12 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
   Widget detailContentsWidget();
   Widget appBar();
   Widget getCustomMessageChatWidget(ChatMessage message);
+
+  /// Use CommonUtils.chatDateHeader for default behaviour on web apps
+  String chatDateHeader(DateTime currentDate, DateTime earlyDate);
+
+  /// Use CommonUtils.getCopyPasteData for default behaviour on web apps
+  dynamic getCopyPasteData();
 
   ChatUser? getUser();
   Future<String?> uploadMediaMessage(Uint8List data,
@@ -245,7 +250,7 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
             color: const Color(0xff329688),
           ),
           child: Text(
-            CommonUtils.chatDateHeader(currentDate, earlyDate),
+            chatDateHeader(currentDate, earlyDate),
             style: const TextStyle(color: Colors.white),
           ),
         );
@@ -384,92 +389,98 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
     return Builder(builder: (context) {
       final isLoading = context
           .select((ChatMessageBloc element) => element.state.isLoadingSend);
-      return DropZoneWidget(
-        onDropImage: onDropImage,
-        widget: SendMessageSuggestionWidget(
-          autoFocus: false,
-          onSelectImage: () {
-            onSelectImageClick();
-          },
-          onSelectFile: () {
-            onSelectFileClick();
-          },
-          textController: sendMessageController,
-          textNode: focusNode,
-          onSend: (Map<String, dynamic> textData) {
-            onSendTextMessage();
-          },
-          inputFormatters: [
-            UpperCaseTextFormatter(),
-          ],
-          sendMessageController: sendMessageController,
-          enable: true,
-          mentions: [
-            Mention(
-              disableMarkup: true,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-              markupBuilder: (String txt1, String txt3, String txt2) {
-                return "";
-              },
-              trigger: "@",
-              suggestionBuilder: (Map<String, dynamic> data) {
-                return Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).appBarTheme.backgroundColor,
-                    border: Border(
-                      bottom: BorderSide(
-                        width: 1,
-                        color: Colors.white.withOpacity(0.5),
-                      ),
+      return SendMessageSuggestionWidget(
+        autoFocus: false,
+        onSelectImage: () {
+          onSelectImageClick();
+        },
+        onSelectFile: () {
+          onSelectFileClick();
+        },
+        textController: sendMessageController,
+        textNode: focusNode,
+        onSend: (Map<String, dynamic> textData) {
+          onSendTextMessage();
+        },
+        inputFormatters: [
+          UpperCaseTextFormatter(),
+        ],
+        sendMessageController: sendMessageController,
+        enable: true,
+        mentions: [
+          Mention(
+            disableMarkup: true,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            markupBuilder: (String txt1, String txt3, String txt2) {
+              return "";
+            },
+            trigger: "@",
+            suggestionBuilder: (Map<String, dynamic> data) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).appBarTheme.backgroundColor,
+                  border: Border(
+                    bottom: BorderSide(
+                      width: 1,
+                      color: Colors.white.withOpacity(0.5),
                     ),
                   ),
-                  padding: const EdgeInsets.only(left: 15, top: 5, bottom: 5),
-                  child: Row(
-                    children: [
-                      (data['photo'] != null && data['photo'].isNotEmpty)
-                          ? Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: CircleAvatar(
-                                radius: 12,
-                                backgroundColor: Colors.grey.shade800,
-                                backgroundImage: NetworkImage(data['photo']),
-                              ),
-                            )
-                          : Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: CircleAvatar(
-                                backgroundColor: Colors.grey.shade800,
-                                radius: 12,
-                                child: Text(
-                                  data['display'][0],
-                                  style: Theme.of(context).textTheme.subtitle1,
-                                ),
+                ),
+                padding: const EdgeInsets.only(left: 15, top: 5, bottom: 5),
+                child: Row(
+                  children: [
+                    (data['photo'] != null && data['photo'].isNotEmpty)
+                        ? Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: CircleAvatar(
+                              radius: 12,
+                              backgroundColor: Colors.grey.shade800,
+                              backgroundImage: NetworkImage(data['photo']),
+                            ),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: CircleAvatar(
+                              backgroundColor: Colors.grey.shade800,
+                              radius: 12,
+                              child: Text(
+                                data['display'][0],
+                                style: Theme.of(context).textTheme.subtitle1,
                               ),
                             ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 18),
-                          child: Text(data['display'],
-                              style: Theme.of(context).textTheme.subtitle1),
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              },
-              data: [],
-            ),
-          ],
-          onDropImage: (String fileType, Uint8List bytes, String fileName) {
-            onDropImage(fileType, bytes, fileName);
-          },
-          onPasteData: () {
-            onPasteImage();
-          },
-          onTap: () {},
-          focusNode: FocusNode(),
-        ),
+                          ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 18),
+                        child: Text(data['display'],
+                            style: Theme.of(context).textTheme.subtitle1),
+                      ),
+                    )
+                  ],
+                ),
+              );
+            },
+            data: [],
+          ),
+        ],
+        onDropImage: (String fileType, Uint8List bytes, String fileName) {
+          onDropImage(fileType, bytes, fileName);
+        },
+        onPasteData: () {
+          onPasteImage();
+        },
+        onTap: () {},
+        focusNode: FocusNode(),
       );
+      // if (kIsWeb) {
+      //   return child;
+      //   // return DropZoneWidget(
+      //   //   onDropImage: onDropImage,
+      //   //   widget: child,
+      //   // );
+      // } else {
+      //   return child;
+      // }
     });
   }
 
@@ -743,7 +754,7 @@ abstract class BaseChatScreen<S extends StatefulWidget> extends State<S>
 
   void onPasteImage() {
     print("===onPasteImage======onPasteImage======");
-    var data = CommonUtils.getCopyPasteData();
+    var data = getCopyPasteData();
     if (data != null) {
       var base64Data = data.split(",")[1];
       var imageType = data.split(",")[0].split("/")[1].split(";")[0];

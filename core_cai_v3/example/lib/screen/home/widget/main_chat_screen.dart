@@ -163,4 +163,20 @@ class _ChatScreenState extends BaseChatScreen<ChatScreen> {
   Widget getCustomMessageChatWidget(ChatMessage message) {
     return Container();
   }
+
+  @override
+  String chatDateHeader(DateTime currentDate, DateTime earlyDate) {
+    return CommonUtils.chatDateHeader(currentDate, earlyDate);
+  }
+
+  @override
+  getCopyPasteData() {
+    return CommonUtils.getCopyPasteData();
+  }
+
+  @override
+  Widget buildMessageComposer() {
+    return DropZoneWidget(
+        onDropImage: onDropImage, widget: super.buildMessageComposer());
+  }
 }

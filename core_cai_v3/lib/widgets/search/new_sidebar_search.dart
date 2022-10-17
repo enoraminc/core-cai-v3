@@ -131,10 +131,10 @@ class _NewSideBarSearchWidgetState extends State<NewSideBarSearchWidget> {
             ],
           ),
         ),
+        const SizedBox(
+          height: 5.0,
+        ),
         if (isShowStateFilter || widget.isAutoShowFilter) ...[
-          const SizedBox(
-            height: 5.0,
-          ),
           buildFilterStates(),
         ]
       ],

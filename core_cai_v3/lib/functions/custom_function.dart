@@ -1,5 +1,5 @@
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class CustomFunctions {
@@ -16,17 +16,21 @@ class CustomFunctions {
   }
 
   static double getMediaWidth(BuildContext context) {
-    if (MediaQuery.of(context).size.width <= 600) {
-      return MediaQuery.of(context).size.width;
-    } else if (MediaQuery.of(context).size.width >= 600 &&
-        MediaQuery.of(context).size.width <= 1200) {
-      return 1000;
-    } else if (MediaQuery.of(context).size.width >= 1200 &&
-        MediaQuery.of(context).size.width <= 1600) {
-      return 1200;
-    } else {
-      return 1450;
+    if (kIsWeb) {
+      if (MediaQuery.of(context).size.width <= 600) {
+        return MediaQuery.of(context).size.width;
+      } else if (MediaQuery.of(context).size.width >= 600 &&
+          MediaQuery.of(context).size.width <= 1200) {
+        return 1000;
+      } else if (MediaQuery.of(context).size.width >= 1200 &&
+          MediaQuery.of(context).size.width <= 1600) {
+        return 1200;
+      } else {
+        return 1450;
+      }
     }
+
+    return MediaQuery.of(context).size.width;
   }
 }
 

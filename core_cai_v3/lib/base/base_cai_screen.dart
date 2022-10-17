@@ -5,11 +5,16 @@ import '../functions/custom_function.dart';
 
 class BaseCaiScreen extends StatelessWidget {
   const BaseCaiScreen(
-      {Key? key, this.sidebarWidget, this.mainWidget, this.isMobile = false})
+      {Key? key,
+      this.sidebarWidget,
+      this.useShadow = true,
+      this.mainWidget,
+      this.isMobile = false})
       : super(key: key);
   final Widget? sidebarWidget;
   final Widget? mainWidget;
   final bool isMobile;
+  final bool useShadow;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +29,7 @@ class BaseCaiScreen extends StatelessWidget {
           width: CustomFunctions.getMediaWidth(context),
           decoration: BoxDecoration(
             color: Theme.of(context).primaryColorDark,
-            boxShadow: !CustomFunctions.isDarkTheme(context)
+            boxShadow: !CustomFunctions.isDarkTheme(context) && useShadow
                 ? [
                     const BoxShadow(color: Colors.grey, blurRadius: 5.0),
                   ]

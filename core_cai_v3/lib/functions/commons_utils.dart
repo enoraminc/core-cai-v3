@@ -1,6 +1,6 @@
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'dart:js' as js;
+
+import 'package:intl/intl.dart';
 
 class CommonUtils {
   static String chatDateHeader(
@@ -30,25 +30,4 @@ class CommonUtils {
     var data = js.context.callMethod("getImageFromClipBoard", []);
     return data;
   }
-}
-
-class UpperCaseTextFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    return TextEditingValue(
-      text: newValue.text.inCaps,
-      selection: newValue.selection,
-    );
-  }
-}
-
-extension CapExtension on String {
-  String get inCaps =>
-      length > 0 ? '${this[0].toUpperCase()}${this.substring(1)}' : '';
-  String get allInCaps => this.toUpperCase();
-  String get capitalizeFirstofEach => replaceAll(RegExp(' +'), ' ')
-      .split(" ")
-      .map((str) => str.inCaps)
-      .join(" ");
 }
