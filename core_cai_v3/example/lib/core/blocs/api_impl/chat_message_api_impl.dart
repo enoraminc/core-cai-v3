@@ -5,8 +5,6 @@ class ChatMessageApiImpl extends ChatMessageApi {
   // final _firestore = FirebaseFirestore.instance;
   // final _storage = FirebaseStorage.instance;
 
-  // final grainCollection = FirebaseFirestore.instance.collection('grains');
-
   @override
   Stream<List<ChatMessage>> getChatMessages(String id) {
     // final collection = grainCollection

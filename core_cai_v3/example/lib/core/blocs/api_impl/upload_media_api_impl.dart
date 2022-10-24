@@ -15,12 +15,9 @@ class UploadMediaApiImpl extends UploadMediaApi {
     firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
         .ref()
         .child('taskFiles/$dateTime/$fileName');
-    print('1');
     firebase_storage.UploadTask task = ref.putData(bytes);
-    print('2');
     String downloadUrl =
         await (await task.whenComplete(() => null)).ref.getDownloadURL();
-    print('3');
     return downloadUrl;
   }
 
@@ -32,12 +29,9 @@ class UploadMediaApiImpl extends UploadMediaApi {
     firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
         .ref()
         .child('taskImages/$newFileName');
-    print('1');
     firebase_storage.UploadTask task = ref.putData(bytes);
-    print('2');
     String downloadUrl =
         await (await task.whenComplete(() => null)).ref.getDownloadURL();
-    print('3');
 
     print('downloadUrl $downloadUrl');
     return downloadUrl;
